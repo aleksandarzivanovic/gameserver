@@ -20,7 +20,7 @@ class VariableAssignment {
 					$args = $typeID['args'];
 				} else if (!is_array ($typeID['args'])) {
 					$args[] = $typeID['args'];
-				} else if (!isset ($type['args'])) {
+				} else if (!isset ($typeID['args'])) {
 					$callbackReturn = (object) call_user_func($callback);
 				}
 
