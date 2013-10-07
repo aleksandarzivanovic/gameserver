@@ -13,7 +13,9 @@ class Database {
 	protected static $_outLogInformations;
 
 	public static function prepare ($query) {
-		unset ($id);
+		if (isset ($id))
+			unset ($id);
+			
 		$id = self::newQueryID();
 
 		static::$_lastPreparedQuery = [
@@ -54,9 +56,10 @@ class Database {
 			$pHolder['placeholders'][$placeholder] = $value;
 
 		}
-		var_dump(static::$_query, $pHolder, $setQueryID);
-		echo '<br /><br />';
+
 		Arrays::setValue (static::$_query, $pHolder, $setQueryID);
+		
+		return (int) $setQueryID;
 	}
 
 	private static function freeID ($key = null) {
@@ -79,10 +82,15 @@ class Database {
 
 		} else {
 
-			if (isset (static::$_query[(int) $key]))
+			if (isset (static::$_query[(int) $key])) {
 				unset (static::$_query[(int) $key]);
-				if (!isset (static::$_query[(int) $key]))
+			
+				if (!isset (static::$_query[(int) $key])) {
 					$tmpKey = (int) $key;
+				} else {
+					throw new Exception ('Clearing query id ' . $key . ' failed.');
+				}
+			}
 		}
 
 		return $tmpKey;
